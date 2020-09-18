@@ -1,0 +1,139 @@
+---
+- name: Install Rust
+  become: yes
+  become_user: isucon
+  shell: | 
+      curl https://sh.rustup.rs -sSf | sh -s -- -y
+- name: Add PATH for Rust
+  become: yes
+  become_user: isucon
+  blockinfile:
+    marker: "# {mark} ANSIBLE MANAGED BLOCK Rust"
+    path: /home/isucon/.bashrc
+    content: |
+      export PATH=/home/isucon/.cargo/bin:$PATH
+
+- name: Update v1.46.0(stable)
+  become: yes
+  become_user: isucon
+  command: /home/isucon/.cargo/bin/rustup update stable
+
+- name: Install Deno v1.3.2
+  become: yes
+  become_user: isucon
+  shell: |
+    curl -fsSL https://deno.land/x/install/install.sh | sh -s v1.3.2
+- name: Add PATH for deno
+  become: yes
+  become_user: isucon
+  blockinfile:
+    marker: "# {mark} ANSIBLE MANAGED BLOCK deno"
+    path: /home/isucon/.bashrc
+    content: |
+      export PATH=/home/isucon/.deno/bin:$PATH
+
+
+- name: install xbuild
+  become: yes
+  become_user: isucon
+  git:
+    repo: https://github.com/tagomoris/xbuild.git
+    dest: /tmp/xbuild
+    version: master
+
+- name: Install PHP
+  become: yes
+  become_user: isucon
+  args:
+    chdir: /home/isucon
+  command: >
+    /tmp/xbuild/php-install 7.4.9 /home/isucon/local/php --
+    --with-pcre-regex --with-zlib --enable-fpm --enable-pdo --with-pear
+    --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-openssl
+    --with-pcre-regex --with-pcre-dir --with-libxml-dir --enable-opcache
+    --enable-bcmath --with-bz2 --enable-calendar --enable-cli --enable-shmop
+    --enable-sysvsem --enable-sysvshm --enable-sysvmsg --enable-mbregex
+    --enable-mbstring --enable-pcntl --enable-sockets --with-curl --enable-zip
+  environment:
+    PHP_BUILD_EXTRA_MAKE_ARGUMENTS: "-j {{ ansible_processor_vcpus }}"
+
+- name: Add PATH for PHP
+  become: yes
+  become_user: isucon
+  blockinfile:
+    marker: "# {mark} ANSIBLE MANAGED BLOCK php"
+    dest: /home/isucon/.bashrc
+    content: |
+      export PATH=/home/isucon/local/php/bin:$PATH
+- name: Install Ruby v2.7.1
+  become: yes
+  become_user: isucon
+  command: /tmp/xbuild/ruby-install 2.7.1 /home/isucon/local/ruby
+
+- name: Add PATH for Ruby
+  become: yes
+  become_user: isucon
+  blockinfile:
+    marker: "# {mark} ANSIBLE MANAGED BLOCK Ruby"
+    path: /home/isucon/.bashrc
+    content: |
+      export PATH=/home/isucon/local/ruby/bin:$PATH
+
+- name: Install perl v5.32.0
+  become: yes
+  become_user: isucon
+  command: /tmp/xbuild/perl-install 5.32.0 /home/isucon/local/perl -- -Duselongdouble -j {{ ansible_processor_vcpus }}
+
+- name: Add PATH for perl 
+  become: yes
+  become_user: isucon
+  blockinfile:
+    marker: "# {mark} ANSIBLE MANAGED BLOCK perl"
+    path: /home/isucon/.bashrc
+    content: |
+      export PATH=/home/isucon/local/perl/bin:$PATH
+
+- name: Install Node v14.9.0
+  become: yes
+  become_user: isucon
+  command: /tmp/xbuild/node-install v14.9.0 /home/isucon/local/node
+
+- name: Add PATH for Node
+  become: yes
+  become_user: isucon
+  blockinfile:
+    marker: "# {mark} ANSIBLE MANAGED BLOCK Node"
+    path: /home/isucon/.bashrc
+    content: |
+      export PATH=/home/isucon/local/node/bin:$PATH
+
+
+- name: Install Go 1.14.7 
+  become: yes
+  become_user: isucon
+  command: /tmp/xbuild/go-install 1.14.7 /home/isucon/local/go
+
+- name: Add PATH for Go
+  become: yes
+  become_user: isucon
+  blockinfile:
+    marker: "# {mark} ANSIBLE MANAGED BLOCK go"
+    path: /home/isucon/.bashrc
+    content: |
+      export PATH=/home/isucon/local/go/bin:/home/isucon/go/bin:$PATH
+      export GOROOT=/home/isucon/local/go
+
+- name: Install python v3.8.5
+  become: yes
+  become_user: isucon
+  command: /tmp/xbuild/python-install 3.8.5 /home/isucon/local/python
+
+- name: Add PATH for python
+  become: yes
+  become_user: isucon
+  blockinfile:
+    marker: "# {mark} ANSIBLE MANAGED BLOCK python"
+    path: /home/isucon/.bashrc
+    content: |
+      export PATH=/home/isucon/local/python/bin:$PATH
+

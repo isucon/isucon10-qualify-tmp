@@ -1,0 +1,27 @@
+- name: Initialize isucon10
+  become: yes
+  become_user: isucon
+  command: curl -X POST http://localhost/initialize
+
+- name : Snapshot isucon10
+  become: yes
+  become_user: isucon
+  args:
+    chdir: /home/isucon/isuumo/initial-data/
+  environment:
+    PATH: "/home/isucon/local/go/bin:/home/isucon/local/node/bin:/home/isucon/local/ruby/bin:/home/isucon/local/python/bin:/home/isucon/local/perl/bin:/home/isucon/local/php/bin:/home/isucon/.cargo/bin:/home/isucon/.deno/bin:/home/isucon/bin:/home/isucon/.local/bin:/usr/bin:/sbin:/bin"
+  shell: |
+    go build -o ./make_verification_data/main ./make_verification_data/*.go && ./make_verification_data/main -fixture-dir ../webapp/fixture -dest-dir ./result/verification_data -target-url http://localhost:1323
+
+
+- name: Build benchmarker
+  become: yes
+  become_user: isucon
+  args:
+    chdir: /home/isucon/isuumo/bench/
+  environment:
+    PATH: "/home/isucon/local/go/bin:/home/isucon/local/node/bin:/home/isucon/local/ruby/bin:/home/isucon/local/python/bin:/home/isucon/local/perl/bin:/home/isucon/local/php/bin:/home/isucon/.cargo/bin:/home/isucon/.deno/bin:/home/isucon/bin:/home/isucon/.local/bin:/usr/bin:/sbin:/bin"
+  shell: |
+    make
+
+

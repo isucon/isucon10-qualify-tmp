@@ -1,0 +1,17 @@
+[Unit]
+Description=isuumo.deno
+
+[Service]
+WorkingDirectory=/home/isucon/isuumo/webapp/deno
+EnvironmentFile=/home/isucon/env.sh
+PIDFile=/home/isucon/isuumo/webapp/deno/server.pid
+
+User=isucon
+Group=isucon
+ExecStart=/home/isucon/.deno/bin/deno run --allow-run --allow-net --allow-read --allow-env --allow-write --unstable /home/isucon/isuumo/webapp/deno/isuumo
+ExecStop=/bin/kill -s QUIT $MAINPID
+
+Restart   = always
+Type      = simple
+[Install]
+WantedBy=multi-user.target

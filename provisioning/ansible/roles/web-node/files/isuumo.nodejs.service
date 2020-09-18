@@ -1,0 +1,18 @@
+[Unit]
+Description=isuumo.nodejs
+
+[Service]
+WorkingDirectory=/home/isucon/isuumo/webapp/nodejs
+EnvironmentFile=/home/isucon/env.sh
+Environment=PATH=/home/isucon/local/node/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+PIDFile=/home/isucon/isuumo/webapp/nodejs/server.pid
+
+User=isucon
+Group=isucon
+ExecStart=/home/isucon/local/node/bin/npm start
+ExecStop=/bin/kill -s QUIT $MAINPID
+
+Restart   = always
+Type      = simple
+[Install]
+WantedBy=multi-user.target

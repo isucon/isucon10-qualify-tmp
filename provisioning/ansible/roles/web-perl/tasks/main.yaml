@@ -1,0 +1,27 @@
+---
+- name: Download cpm
+  get_url:
+    url: https://raw.githubusercontent.com/skaji/cpm/master/cpm
+    dest: /home/isucon/local/perl/bin/cpm
+    mode: '0755'
+
+- name: Install isuumo.perl Pacakges
+  become: yes
+  become_user: isucon
+  environment:
+    PATH: "/home/isucon/local/go/bin:/home/isucon/local/node/bin:/home/isucon/local/ruby/bin:/home/isucon/local/python/bin:/home/isucon/local/perl/bin:/home/isucon/local/php/bin:/home/isucon/.cargo/bin:/home/isucon/.deno/bin:/home/isucon/bin:/home/isucon/.local/bin:/usr/bin:/sbin:/bin"
+  args:
+    chdir: /home/isucon/isuumo/webapp/perl
+  shell: |
+    /home/isucon/local/perl/bin/cpm install -g --show-build-log-on-failure
+
+
+- name: Copy Service file
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  with_items:
+    - isuumo.perl.service

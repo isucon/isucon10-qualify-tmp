@@ -1,0 +1,11 @@
+- name: Increase file limits for sysctl
+  copy:
+    dest: /etc/sysctl.d/50-fs.conf
+    content: |
+      fs.file-max=655360
+- name: Tune up network
+  become: yes
+  copy:
+    dest: /etc/sysctl.d/92-net.conf
+    content: |
+      net.core.somaxconn=65535

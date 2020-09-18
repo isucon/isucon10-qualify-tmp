@@ -1,0 +1,57 @@
+{
+  "name": "isuumo-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env ENV=development node server.js",
+    "build": "next build",
+    "prod": "cross-env ENV=production node server.js",
+    "start": "next start",
+    "export": "next export",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/isucon10-qualify/isucon10-qualify/blob/master/client"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@material-ui/core": "^4.9.14",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.54",
+    "@types/next": "^9.0.0",
+    "cross-env": "^7.0.2",
+    "express": "^4.17.1",
+    "google-map-react": "^1.1.7",
+    "http-proxy-middleware": "^1.0.4",
+    "leaflet": "^1.6.0",
+    "monotone-convex-hull-2d": "^1.0.1",
+    "next": "^9.4.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-leaflet": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.4",
+    "@types/react": "^16.9.35",
+    "@types/react-leaflet": "^2.5.1",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^3.0.1",
+    "eslint": "^7.1.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-config-standard-react": "^9.2.0",
+    "eslint-config-standard-with-typescript": "^16.0.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.0.4",
+    "eslint-plugin-standard": "^4.0.1",
+    "serve": "^11.3.1",
+    "typescript": "^3.9.3"
+  }
+}

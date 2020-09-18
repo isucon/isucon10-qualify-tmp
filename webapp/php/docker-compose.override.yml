@@ -1,0 +1,17 @@
+version: "3"
+services:
+  api-server:
+    build: ./php
+    entrypoint: make run
+    environment:
+      MYSQL_DATABASE: isuumo
+      MYSQL_USER: isucon
+      MYSQL_PASSWORD: isucon
+      MYSQL_HOST: mysql
+      SERVER_PORT: 1323
+    ports:
+      - 1323:1323
+    volumes:
+      - ./fixture:/fixture
+      - ./php:/php
+      - ./mysql:/mysql

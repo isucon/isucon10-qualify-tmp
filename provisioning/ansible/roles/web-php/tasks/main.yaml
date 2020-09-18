@@ -1,0 +1,56 @@
+---
+- name: Put isuumo.php-fpm.conf
+  become: yes
+  become_user: isucon
+  copy:
+    src: isuumo.php-fpm.conf
+    dest: /home/isucon/local/php/etc/isuumo.php-fpm.conf
+
+- name: Fix php.ini for Memory Limit
+  become: yes
+  become_user: isucon
+  ini_file:
+    path: /home/isucon/local/php/etc/php.ini
+    section: PHP
+    option: memory_limit
+    value: -1
+    mode: 0644
+    backup: yes
+
+- name: Download Composer
+  become: yes
+  become_user: isucon
+  get_url:
+    url: https://getcomposer.org/download/1.10.13/composer.phar
+    dest: /home/isucon/local/php/bin/composer
+    sha256sum: 5ca7445cfd48dd27c5a84aa005a47b4d9fd91132313830609875df3a6973708f
+    mode: 0755
+
+- name: Install isuumo.php Pacakges
+  become: yes
+  become_user: isucon
+  environment:
+    PATH: "/home/isucon/local/go/bin:/home/isucon/local/node/bin:/home/isucon/local/ruby/bin:/home/isucon/local/python/bin:/home/isucon/local/perl/bin:/home/isucon/local/php/bin:/home/isucon/.cargo/bin:/home/isucon/.deno/bin:/home/isucon/bin:/home/isucon/.local/bin:/usr/bin:/sbin:/bin"
+  args:
+    chdir: /home/isucon/isuumo/webapp/php
+  shell: |
+    /home/isucon/local/php/bin/composer install
+
+
+- name: Deploy nginx isuumo.conf
+  copy:
+    src: "isuumo.php.conf"
+    dest: "/etc/nginx/sites-available/isuumo.php.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: Copy Service file
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  with_items:
+    - isuumo.php.service

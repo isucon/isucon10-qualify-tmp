@@ -1,0 +1,72 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ../mysql/data:/var/lib/mysql
+      - ../mysql/db:/docker-entrypoint-initdb.d
+      - ../logs/mysql:/var/log/mysql
+      - ../../provisioning/ansible/roles/web-bootstrap/files/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ../../provisioning/ansible/roles/web-bootstrap/files/slow-mysqld.cnf:/etc/mysql/conf.d/slowquery.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: isuumo
+      MYSQL_USER: isucon
+      MYSQL_PASSWORD: isucon
+    ports:
+      - "3306:3306"
+
+  api-server:
+    build: ../rust
+    entrypoint:
+      - dockerize
+      - -timeout
+      - 60s
+      - -wait
+      - tcp://mysql:3306
+    volumes:
+      - ../mysql/db:/usr/src/mysql/db
+      - ../fixture:/usr/src/fixture
+    environment:
+      MYSQL_DATABASE: isuumo
+      MYSQL_USER: isucon
+      MYSQL_PASSWORD: isucon
+      MYSQL_HOST: mysql
+      SERVER_PORT: 1323
+    ports:
+      - "1323:1323"
+    depends_on:
+      - mysql
+    command: cargo run --release
+
+  frontend:
+    build: ../frontend
+    volumes:
+      - ../nginx/out:/frontend/out
+
+  nginx:
+    build: ../nginx
+    volumes:
+        - ../../provisioning/ansible/roles/web-bootstrap/files/nginx.conf.template:/etc/nginx/nginx.conf.template
+        - ../logs/nginx:/var/log/nginx
+        - ../nginx/cond.d:/etc/nginx/conf.d
+        - ../nginx/out:/www/data
+    ports:
+      - "8080:80"
+    entrypoint:
+      - dockerize
+      - -timeout
+      - 60s
+      - -wait
+      - http://api-server:1323/api/estate/search/condition
+    environment:
+      API_SERVER: api-server
+    depends_on:
+      - frontend
+    command: >
+      /bin/sh -c
+      "envsubst '
+      $$API_SERVER
+      '< /etc/nginx/nginx.conf.template
+      > /etc/nginx/nginx.conf
+      && nginx -g 'daemon off;'"

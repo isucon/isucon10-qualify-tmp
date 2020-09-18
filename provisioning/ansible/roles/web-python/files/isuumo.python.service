@@ -1,0 +1,17 @@
+[Unit]
+Description=isuumo.python
+After=syslog.target
+
+[Service]
+WorkingDirectory=/home/isucon/isuumo/webapp/python
+EnvironmentFile=/home/isucon/env.sh
+PIDFile=/home/isucon/isuumo/webapp/python/server.pid
+
+User=isucon
+Group=isucon
+ExecStart=/home/isucon/local/python/bin/python app.py
+
+Restart   = always
+Type      = simple
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,6 @@
+out
+node_modules
+.next
+.vscode
+public/images/estate/*.png
+public/images/chair/*.png

@@ -1,0 +1,17 @@
+[Unit]
+Description=isuumo.ruby
+
+[Service]
+WorkingDirectory=/home/isucon/isuumo/webapp/ruby
+EnvironmentFile=/home/isucon/env.sh
+PIDFile=/home/isucon/isuumo/webapp/ruby/server.pid
+
+User=isucon
+Group=isucon
+ExecStart=/home/isucon/local/ruby/bin/bundle exec unicorn -c unicorn.conf.rb
+ExecStop=/bin/kill -s QUIT $MAINPID
+
+Restart   = always
+Type      = simple
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,30 @@
+{
+  "name": "isuumo",
+  "version": "1.0.0",
+  "description": "isuumo chair search",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isucon/isucon10-qualify.git"
+  },
+  "author": "isucon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/isucon/isucon10-qualify/issues"
+  },
+  "homepage": "https://github.com/isucon/isucon10-qualify#readme",
+  "dependencies": {
+    "camelcase-keys": "^6.2.2",
+    "csv-parse": "^4.12.0",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "mysql": "^2.18.1"
+  }
+}

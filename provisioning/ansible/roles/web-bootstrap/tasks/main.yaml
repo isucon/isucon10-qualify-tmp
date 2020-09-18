@@ -1,0 +1,210 @@
+---
+- name: Check isucon10-qualify
+  become: no
+  stat:
+    path: "/home/isucon/isuumo"
+  register: chk_file
+
+- name: Delete isucon10-qualify if exists
+  become: yes
+  become_user: root
+  file:
+    path: /home/isucon/isuumo
+    state: absent
+  when: chk_file.stat.exists
+
+- name: Clone isucon10-qualify
+  become: no
+  git:
+    repo: git@github.com:isucon/isucon10-qualify.git
+    version: master
+    dest: /tmp/isucon10-qualify
+    accept_hostkey: yes
+
+- name: Chgroup isucon10-qualify repo
+  become: yes
+  become_user: root
+  file:
+    path: /tmp/isucon10-qualify
+    state: directory
+    owner: isucon
+    group: isucon
+    recurse: yes
+
+- name: Deploy isucon10-qualify
+  become: yes
+  become_user: isucon
+  command: mv /tmp/isucon10-qualify /home/isucon/isuumo
+
+- name: Upgrade pip
+  environment: &env
+    PATH: "/home/isucon/local/go/bin:/home/isucon/local/node/bin:/home/isucon/local/ruby/bin:/home/isucon/local/python/bin:/home/isucon/local/perl/bin:/home/isucon/local/php/bin:/home/isucon/.cargo/bin:/home/isucon/.deno/bin:/home/isucon/bin:/home/isucon/.local/bin:/usr/bin:/sbin:/bin"
+  pip:
+    name: pip
+    executable: pip3
+    state: latest
+
+- name: Deploy nginx.conf
+  copy:
+    src: "nginx.conf"
+    dest: "/etc/nginx/nginx.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: Deploy nginx isuumo.conf
+  copy:
+    src: "isuumo.conf"
+    dest: "/etc/nginx/sites-available/isuumo.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: Enable isuumo.config
+  file:
+    path: /etc/nginx/sites-enabled/isuumo.conf
+    src: /etc/nginx/sites-available/isuumo.conf
+    state: link
+
+- name: Delete default config
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Install Package(MYSQL)
+  become: yes
+  become_user: root
+  apt:
+    name:
+    - mysql-server-5.7
+    - mysql-server-core-5.7
+    - mysql-common
+    - mysql-client-5.7
+    - mysql-client-core-5.7
+    - libmysqld-dev
+    update_cache: yes
+
+
+- name: Set Temporary password
+  become: yes
+  become_user: root
+  blockinfile:
+    create: yes
+    dest: &myCnf /root/.my.cnf
+    content: |
+      [client]
+      user = root
+      password = root
+
+- name: Create isucon user on MySQL
+  become: yes
+  become_user: root
+  shell: |
+      mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO isucon@localhost IDENTIFIED BY 'isucon' WITH GRANT OPTION; FLUSH PRIVILEGES;"
+
+- name: Remove Temporary file
+  become: yes
+  become_user: root
+  file:
+    path: *myCnf
+    state: absent
+
+- name: Copy mysqld.conf
+  become: yes
+  become_user: root
+  copy:
+    src: "mysqld.cnf"
+    dest: "/etc/mysql/mysql.conf.d/mysqld.cnf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: Copy my.conf
+  become: yes
+  become_user: root
+  copy:
+    src: "my.cnf"
+    dest: "/etc/mysql/conf.d/my.cnf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: Install Faker for Initialize Data
+  become: yes
+  become_user: root
+  environment: 
+    <<: *env
+  pip:
+    executable: pip3
+    name: Faker
+
+- name: Make initial data
+  become: yes
+  become_user: isucon
+  args:
+    chdir: /home/isucon/isuumo/initial-data
+  environment: 
+    <<: *env
+  shell: |
+    make chair_data && make estate_data
+
+- name: Restart "mysql"
+  systemd:
+    daemon_reload: "yes"
+    name: "mysql"
+    state: "restarted"
+    enabled: "yes"
+
+- name: Setup MySQL
+  become: yes
+  become_user: isucon
+  args:
+    chdir: /home/isucon/isuumo
+  environment:
+    <<: *env
+  shell: |
+    mysql -u isucon -pisucon < webapp/mysql/db/0_Schema.sql
+
+- name: Install frontend packages
+  become: yes
+  become_user: isucon
+  args:
+    chdir: /home/isucon/isuumo/webapp/frontend
+  environment:
+    <<: *env
+  shell: |
+    npm ci
+
+- name: Build frontend application
+  become: yes
+  become_user: isucon
+  args:
+    chdir: /home/isucon/isuumo/webapp/frontend
+  environment:
+    <<: *env
+  shell: |
+    npm run build
+
+- name: Export frontend application
+  become: yes
+  become_user: isucon
+  args:
+    chdir: /home/isucon/isuumo/webapp/frontend
+  environment:
+    <<: *env
+  shell: |
+    npm run export
+
+- name: Deploy static files
+  become: yes
+  become_user: root
+  shell: |
+    mkdir -p /www/data && cp -pR /home/isucon/isuumo/webapp/frontend/out/* /www/data
+
+- name: Deploy env shellscript
+  become: yes
+  become_user: isucon
+  copy:
+    src: "env.sh"
+    dest: /home/isucon
+

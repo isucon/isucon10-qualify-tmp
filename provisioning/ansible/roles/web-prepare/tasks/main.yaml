@@ -1,0 +1,19 @@
+---
+- name: Start "isuumo.go.service"
+  systemd:
+    daemon_reload: "yes"
+    name: "isuumo.go.service"
+    state: "restarted"
+    enabled: "yes"
+
+- name: Start "nginx"
+  systemd:
+    daemon_reload: "yes"
+    name: "nginx"
+    state: "reloaded"
+    enabled: "yes"
+
+- name: Initialize isucon10
+  become: yes
+  become_user: isucon
+  command: curl -X POST http://localhost/initialize

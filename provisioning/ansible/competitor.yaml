@@ -1,0 +1,17 @@
+- hosts: all
+  become: yes
+  become_user: root
+  roles:
+    - role: common
+    - role: langs
+    - role: web-bootstrap
+    - role: web-go
+    - role: web-node
+    - role: web-ruby
+    - role: web-rust
+    - role: web-deno
+    - role: web-php
+    - role: web-perl
+    - role: web-python
+    - role: web-prepare
+    - role: remove

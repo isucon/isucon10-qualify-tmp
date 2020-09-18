@@ -1,0 +1,82 @@
+---
+- name: Create isucon group
+  become: yes
+  become_user: root
+  group:
+    name: isucon
+    gid: 1100
+    state: present
+    system: no
+
+- name: Create isucon user
+  become: yes
+  become_user: root
+  user:
+    name: isucon
+    uid: 1100
+    group: isucon
+    password: $1$SALTsalt$e7jg2tj3sKVpmYXXmivBb0
+    home: /home/isucon
+    shell: /bin/bash
+    state: present
+    system: no
+
+- name: Add sudoers
+  become: yes
+  become_user: root
+  copy:
+    content: "isucon  ALL=(ALL) NOPASSWD:ALL\n"
+    dest: /etc/sudoers.d/99-isucon-user
+    owner: root
+    group: root
+    mode: 0440
+
+- name: Replace fast repository
+  replace:
+    path: /etc/apt/sources.list
+    regexp: 'http://archive.ubuntu.com/ubuntu'
+    replace: 'http://ftp.jaist.ac.jp/pub/Linux/ubuntu/'
+    backup: yes
+
+- name: Install Package(Build)
+  become: yes
+  become_user: root
+  apt:
+    name: 
+    - libssl-dev
+    - libreadline-dev
+    - gcc
+    - make
+    - libffi-dev
+    - zlib1g-dev
+    - unzip
+    - pkg-config
+    - autoconf
+    - automake
+    - build-essential
+    - nginx
+    - libxml2-dev
+    - libsqlite3-dev
+    - libbz2-dev
+    - libkrb5-dev
+    - libcurl4-openssl-dev
+    - libpng-dev
+    - libjpeg-dev
+    - libfreetype6-dev
+    - libc-client2007e-dev
+    - libxslt-dev
+    - libonig-dev
+    - libtidy-dev
+    - libzip-dev
+    - default-mysql-client
+    - default-libmysqlclient-dev
+    update_cache: yes
+
+- name: install xbuild
+  become: yes
+  become_user: isucon
+  git:
+    repo: https://github.com/tagomoris/xbuild.git
+    dest: /tmp/xbuild
+    version: master
+

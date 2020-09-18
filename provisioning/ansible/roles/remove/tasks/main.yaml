@@ -1,0 +1,42 @@
+- name: Remove provisioning file
+  become: yes
+  become_user: root
+  file:
+    path: "/home/isucon/isuumo/{{ item }}"
+    state: absent
+  with_items:
+    - agreed
+    - bench
+    - provisioning
+    - initial-data
+    - .git
+    - .github
+    - .gitignore
+    - LICENSE
+    - README.md
+    - webapp/docker-compose-test.yaml
+    - webapp/Makefile
+    - webapp/.gitignore
+    - webapp/go/Dockerfile
+    - webapp/go/chair_test.go
+    - webapp/go/estate_test.go
+    - webapp/go/main_test.go
+    - webapp/mysql/.gitignore
+    - Makefile
+    - cloudbuild.yaml
+    - webapp/kataribe.toml
+    - webapp/logs
+    - webapp/nginx
+    - webapp/frontend
+    - webapp/deno/Dockerfile
+    - webapp/nodejs/Dockerfile
+    - webapp/go/Dockerfile
+    - webapp/frontend/Dockerfile
+    - webapp/python/Dockerfile
+    - webapp/perl/Dockerfile
+    - webapp/rust/Dockerfile
+    - webapp/php/Dockerfile
+    - webapp/nginx/Dockerfile
+    - webapp/ruby/Dockerfile
+    - webapp/docker-compose
+    - webapp/php/docker-compose.override.yml

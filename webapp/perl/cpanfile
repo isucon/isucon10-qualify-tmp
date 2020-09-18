@@ -1,0 +1,10 @@
+requires 'Kossy', '0.40';
+requires 'DBD::mysql', '4.050';
+requires 'DBIx::Sunny', '0.9992';
+requires 'HTTP::Status';
+requires 'Log::Minimal';
+requires 'JSON::MaybeXS', '1.004002';
+requires 'constant';
+requires 'Cpanel::JSON::XS::Type';
+requires 'Starlet';
+requires 'Text::CSV_XS', '1.44';

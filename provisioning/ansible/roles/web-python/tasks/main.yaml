@@ -1,0 +1,21 @@
+---
+- name: Install isuumo.python Pacakges
+  become: yes
+  become_user: isucon
+  environment:
+    PATH: "/home/isucon/local/go/bin:/home/isucon/local/node/bin:/home/isucon/local/ruby/bin:/home/isucon/local/python/bin:/home/isucon/local/perl/bin:/home/isucon/local/php/bin:/home/isucon/.cargo/bin:/home/isucon/.deno/bin:/home/isucon/bin:/home/isucon/.local/bin:/usr/bin:/sbin:/bin"
+  args:
+    chdir: /home/isucon/isuumo/webapp/python
+  shell: |
+    /home/isucon/local/python/bin/pip install -r requirements.txt
+
+
+- name: Copy Service file
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/systemd/system"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  with_items:
+    - isuumo.python.service
