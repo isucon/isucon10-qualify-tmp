@@ -16,7 +16,7 @@
 - name: Clone isucon10-qualify
   become: no
   git:
-    repo: git@github.com:isucon/isucon10-qualify.git
+    repo: https://github.com/isucon/isucon10-qualify.git
     version: master
     dest: /tmp/isucon10-qualify
     accept_hostkey: yes
