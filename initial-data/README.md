@@ -8,6 +8,10 @@
 pip3 install -r requirements.txt
 ```
 
+```sh
+go get github.com/orisano/wayt
+```
+
 
 ## 初期データの生成
 
