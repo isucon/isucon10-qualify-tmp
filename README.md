@@ -24,6 +24,20 @@
 - [Faker](https://faker.readthedocs.io/)
 - [いらすとや](https://www.irasutoya.com/)
 
+## ISUCON10 予選のインフラ構成について
+
+- 問題用 (3台)
+    - CPU: 1 Core (AMD EPYC 7352)
+    - Memory: 2 GiB
+    - IO throughput: 100 Mbps
+    - IOPS limit: 200 (Read / Write)
+    - Interface: 1 Gbps
+- ベンチマーカ用 (1台)
+    - CPU: 1 Core  (AMD EPYC 7352)
+    - Memory: 16 GiB
+    - IO throughput: 100 Mbps
+    - IOPS limit: 200 (Read / Write)
+    - Interface: 100 Mbps
 
 ## Links
 
