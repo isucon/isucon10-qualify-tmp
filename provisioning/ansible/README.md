@@ -14,8 +14,7 @@ ansible 2.9.13で動作確認しています
 
 本Vagrantファイルは1台構成で，allinone.yamlを実行した結果を提供しています
 別の，設定を利用したい場合は,
-- Vagrant ファイルの書き換え
-      ansible.playbook = "allinone.yaml"
+- Vagrant ファイルの書き換え (ansible.playbook = "allinone.yaml")
 - inventory/hostsの書き換え
 を行ってから，下記の操作を行ってください．
 
@@ -37,6 +36,7 @@ vagrant provision
 ## サーバーへのprovisionning
 
 inventory/hostsの該当セクションを書き換えて，ansible playbookを実行してください．
+passwordつきログインユーザーが作製されるので外部サーバーを使う場合はご注意ください.
 
 ### ベンチマーカーサーバー
 
