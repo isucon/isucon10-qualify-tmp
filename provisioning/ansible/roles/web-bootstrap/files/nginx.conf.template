@@ -16,12 +16,29 @@ http {
     log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
                       '$status $body_bytes_sent "$http_referer" '
                       '"$http_user_agent" "$http_x_forwarded_for"';
+    log_format ltsv "time:$time_local"
+                                "\thost:$remote_addr"
+                                "\tforwardedfor:$http_x_forwarded_for"
+                                "\treq:$request"
+                                "\tstatus:$status"
+                                "\tmethod:$request_method"
+                                "\turi:$request_uri"
+                                "\tsize:$body_bytes_sent"
+                                "\treferer:$http_referer"
+                                "\tua:$http_user_agent"
+                                "\treqtime:$request_time"
+                                "\tcache:$upstream_http_x_cache"
+                                "\truntime:$upstream_http_x_runtime"
+                                "\tapptime:$upstream_response_time"
+                                "\tvhost:$host";
 
     access_log  /var/log/nginx/access.log  main;
 
     server {
         listen 80 default_server;
         listen [::]:80 default_server;
+
+        access_log /var/log/nginx/ltsv_access.log ltsv;
 
         location /api {
                 proxy_pass http://${API_SERVER}:1323;
