@@ -28,7 +28,7 @@ services:
       - ../mysql/db:/go/src/mysql/db
       - ../fixture:/go/src/fixture
     environment:
-      MYSQL_DATABASE: isuumo
+      MYSQL_DBNAME: isuumo
       MYSQL_USER: isucon
       MYSQL_PASSWORD: isucon
       MYSQL_HOST: mysql

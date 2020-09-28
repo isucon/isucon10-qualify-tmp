@@ -28,7 +28,7 @@ services:
       - ../mysql/db:/usr/src/mysql/db
       - ../fixture:/usr/src/fixture
     environment:
-      MYSQL_DATABASE: isuumo
+      MYSQL_DBNAME: isuumo
       MYSQL_USER: isucon
       MYSQL_PASSWORD: isucon
       MYSQL_HOST: mysql
