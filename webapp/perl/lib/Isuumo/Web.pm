@@ -22,7 +22,7 @@ my $MYSQL_CONNECTION_DATA = {
     host     => $ENV{MYSQL_HOST}     // '127.0.0.1',
     port     => $ENV{MYSQL_PORT}     // '3306',
     user     => $ENV{MYSQL_USER}     // 'isucon',
-    dbname   => $ENV{MYSQL_DATABASE} // 'isuumo',
+    dbname   => $ENV{MYSQL_DBNAME}   // 'isuumo',
     password => $ENV{MYSQL_PASS}     // 'isucon',
 };
 
