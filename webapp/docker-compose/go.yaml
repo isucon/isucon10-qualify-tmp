@@ -30,7 +30,7 @@ services:
     environment:
       MYSQL_DBNAME: isuumo
       MYSQL_USER: isucon
-      MYSQL_PASSWORD: isucon
+      MYSQL_PASS: isucon
       MYSQL_HOST: mysql
       SERVER_PORT: 1323
     ports:
